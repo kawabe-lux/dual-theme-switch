@@ -1,0 +1,72 @@
+/* color scheme */
+
+/* theme light */
+:root:not([theme=dark]),
+[theme=light] {
+  --text-color:black;
+  --border-color: var(--text-color);
+  --background-color: white;
+}
+
+/* theme dark */
+@media only screen and (prefers-color-scheme:dark) {
+  :root:not([theme=light]) {
+    --text-color: white;
+    --border-color: var(--text-color);
+    --background-color: black;
+  }
+}
+
+[theme=dark] {
+  --text-color:white;
+  --border-color:var(--text-color);
+  --background-color: black;
+}
+
+
+/* switch */
+
+[role="switch"]{
+  padding: 0;
+  display: inline-flex;
+  border: solid var(--button-border-width) var(--border-color);
+  color: var(--background-color);
+  background-color: var(--text-color);
+}
+[role="switch"]:hover{
+  box-shadow: var(--focus-box-shadow);
+}
+
+[role="switch"] span{
+  padding: 0.5em;
+  display: inline-block;
+}
+[role="switch"] svg{
+  padding: 0.4em;
+  width: 1.4em;
+  height: 1.4em;
+}
+
+/* passive */
+[role="switch"][aria-checked="false"]>:first-child,
+[role="switch"][aria-checked="true"]>:last-child {
+  background: var(--background-color);
+}
+[role="switch"][aria-checked="false"] span:first-child,
+[role="switch"][aria-checked="true"] span:last-child {
+  color: var(--text-color);
+}
+[role="switch"][aria-checked="false"] svg:first-child,
+[role="switch"][aria-checked="true"] svg:last-child {
+  stroke: var(--text-color);
+}
+
+/* active */
+[role="switch"][aria-checked="true"] span:first-child,
+[role="switch"][aria-checked="true"] svg:first-child,
+[role="switch"][aria-checked="false"] span:last-child,
+[role="switch"][aria-checked="false"] svg:last-child {
+  box-shadow: inset 0 0 0 2px var(--background-color);
+}
+
+
