@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <title>theme-switch</title>
+  <link rel="stylesheet" type="text/css" href="theme_switch.css">
+  <script src="theme_switch.js"></script>
+  <style>
+    /* disable script-driven elements */
+
+    .js-only{
+      display: none;
+    }
+
+    /* content */
+
+    .visually-hidden {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    /* some styling */
+
+    :root {
+      --button-border-width: 0.15rem;
+      --focus-color: red;
+      --focus-box-shadow: 2px 2px var(--focus-color);
+      --text-font: system-ui, -apple-system, "Segoe UI", "Roboto", "Ubuntu", "Cantarell", "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+
+    :root{
+      font-family: var(--text-font);
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+
+    body{
+      max-width: 40em;
+      margin: 0 auto;
+    }
+
+    header, main{
+      margin: 1em;
+    }
+
+    :focus{
+      outline-style: solid;
+      outline-color: var(--focus-color);
+      outline-width: 0.2rem;
+    }
+
+  </style>
+</head>
+<body>
+  <script>
+    (function(){  
+      // enables JavaScript-only elements
+      const style = document.createElement("style");
+      style.innerHTML = ".js-only{display:unset}";
+      document.head.appendChild(style);
+
+      const jsOnly = document.getElementsByClassName("js-only");
+      for (var i = jsOnly.length - 1; i >= 0; i--) {
+        jsOnly[i].removeAttribute("hidden");
+      }
+    })()
+  </script>
+  <header>
+    <!-- theme switch start -->
+    <div class="js-only">
+      <div id="theme-label">
+        theme
+      </div>
+      <button id="theme-button" role="switch" aria-checked="true" aria-labelledby="theme-label">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+    <!-- theme switch end -->
+  </header>
+
+  <main>
+    <article>The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex! </article>
+  </main>
+</body>
