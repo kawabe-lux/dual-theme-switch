@@ -1,9 +1,8 @@
 (function(){  
   let themeStored
+  const root = document.documentElement;
   // is called before DOM is loaded
   function init() {
-    const root = document.documentElement;
-
     themeStored = sessionStorage.getItem('theme');
     if (themeStored !== null){
       root.setAttribute("theme", themeStored);
@@ -19,37 +18,59 @@
   
   // is called after DOM is loaded
   function onDOMLoad() {    
-    setSwitch("theme", function(pressed) {
-      let theme;
-      if (pressed == false){
-        theme = "dark";
-      }
-      else{
-        theme = "light";
-      }
-      document.documentElement.setAttribute("theme", theme);
+    setSwitch("theme", function(theme) {
+      root.setAttribute("theme", theme);
       sessionStorage.setItem('theme', theme);
     })
     
+    const radios = document.getElementById("theme-switch").radios;
     //sets switch to "DE" if stored so
     if (typeof themeStored != "undefined" && themeStored != null){
-      if (themeStored == "dark"){
-        document.getElementById("theme-button").setAttribute("aria-checked", "false");
+      if (themeStored in radios){
+        radios[themeStored].checked = true;
       }
     }
     else if (window.matchMedia("(prefers-color-scheme: dark)").matches === true){
-      document.getElementById("theme-button").setAttribute("aria-checked", "false");
+      radios["dark"].checked = true;
     }
   }
   
   // function for dual switch function creation
   function setSwitch(name, callback) {
-    const button = document.getElementById(name + "-button");
-    button.addEventListener("click", function(){
-      const pressed = this.getAttribute("aria-checked") === "true";
-      this.setAttribute("aria-checked", !pressed);
-      callback(!pressed);
-    });
+    const switchEl = document.getElementById(name + "-switch");
+    const radios = switchEl.getElementsByTagName("input");
+    /*switchEl.radios = radios;*/
+    switchEl.radios = {};
+    for (var i = radios.length - 1; i >= 0; i--) {
+      // set radio relationship
+      if (radios[i].checked === true) {
+        switchEl.radioChecked = radios[i];
+      }
+      radios[i].switch = switchEl;
+      if (i === radios.length - 1) {
+        radios[i].nextRadio = radios[0];
+      }
+      else {
+        radios[i].nextRadio = radios[i + 1];
+      }
+      switchEl.radios[radios[i].value] = radios[i];
+      // Click event
+      radios[i].addEventListener("click", function(event){
+        // check next if already checked
+        const checked = this.checked;
+        if (this === this.switch.radioChecked) {
+          // check next
+          this.switch.radioChecked = this.nextRadio;
+          this.checked = false;
+          this.nextRadio.checked = true;
+        }
+        else {
+          this.switch.radioChecked = this;
+        }
+        const value = this.switch.radioChecked.value;
+        callback(value);
+      });
+    }
   }
   
   init();
