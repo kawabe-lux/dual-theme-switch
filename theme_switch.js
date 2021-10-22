@@ -17,31 +17,33 @@
   }
   
   // is called after DOM is loaded
-  function onDOMLoad() {    
-    setSwitch("theme", function(theme) {
+  function onDOMLoad() {
+    const themeSwitch = setSwitch("theme-switch", function(theme) {
       root.setAttribute("theme", theme);
       sessionStorage.setItem('theme', theme);
     })
-    
-    const radios = document.getElementById("theme-switch").radios;
-    //sets switch to "DE" if stored so
+
+    //sets switch to the stored language
     if (typeof themeStored != "undefined" && themeStored != null){
-      if (themeStored in radios){
-        radios[themeStored].checked = true;
+      if (themeStored in themeSwitch.radios){
+        themeSwitch.radios[themeStored].check();
       }
     }
     else if (window.matchMedia("(prefers-color-scheme: dark)").matches === true){
-      radios["dark"].checked = true;
+      themeSwitch.radios["dark"].check();
     }
   }
   
   // function for dual switch function creation
   function setSwitch(name, callback) {
-    const switchEl = document.getElementById(name + "-switch");
+    const switchEl = document.getElementById(name);
     const radios = switchEl.getElementsByTagName("input");
-    /*switchEl.radios = radios;*/
     switchEl.radios = {};
-    for (var i = radios.length - 1; i >= 0; i--) {
+    for (let i = radios.length - 1; i >= 0; i--) {
+      radios[i].check = function() {
+        this.checked = true;
+        this.switch.radioChecked = this;
+      }
       // set radio relationship
       if (radios[i].checked === true) {
         switchEl.radioChecked = radios[i];
@@ -59,18 +61,16 @@
         // check next if already checked
         const checked = this.checked;
         if (this === this.switch.radioChecked) {
-          // check next
-          this.switch.radioChecked = this.nextRadio;
-          this.checked = false;
-          this.nextRadio.checked = true;
+          // if already checked, check next
+          this.nextRadio.check();
         }
         else {
           this.switch.radioChecked = this;
         }
-        const value = this.switch.radioChecked.value;
-        callback(value);
+        callback(this.switch.radioChecked.value);
       });
     }
+    return switchEl
   }
   
   init();
